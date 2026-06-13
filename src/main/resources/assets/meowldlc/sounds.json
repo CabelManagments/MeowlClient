@@ -1,0 +1,28 @@
+{
+  "hit_sound": {
+    "category": "master",
+    "sounds": [
+      "meowldlc:hit_sound"
+    ]
+  },
+  "kill_sound": {
+    "category": "master",
+    "sounds": [
+      "meowldlc:kill_sound"
+    ]
+  },
+  "enable_sound": {
+    "category": "master",
+    "sounds": [
+      "meowldlc:enable_sound"
+    ]
+  },
+  "disable_sound": {
+    "category": "master",
+    "sounds": [
+      "meowldlc:disable_sound"
+    ]
+  }
+}
+
+

@@ -1,0 +1,14 @@
+# Gradle файлы кэша и сборки
+.gradle/
+build/
+
+# Настройки сред разработки (IntelliJ IDEA)
+.idea/
+*.iml
+*.iws
+
+# Логи и временные файлы игры при тестах
+run/
+.fabric/
+logs/
+

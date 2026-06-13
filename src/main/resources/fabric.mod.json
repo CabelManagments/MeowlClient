@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "meowldlc",
+  "version": "${version}",
+  "name": "MeowlDLC",
+  "description": "Приватный визуальный клиент с кастомным интерфейсом и звуками.",
+  "authors": [
+    "Твой Никнейм"
+  ],
+  "contact": {
+    "sources": "https://github.com/твоя-ссылка-на-репозиторий"
+  },
+  "license": "MIT",
+  "icon": "assets/meowldlc/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ru.meowl.client.MeowlDLC"
+    ]
+  },
+  "mixins": [
+    "meowldlc.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
+

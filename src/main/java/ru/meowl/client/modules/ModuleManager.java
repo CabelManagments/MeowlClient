@@ -2,33 +2,57 @@ package ru.meowl.client.modules;
 
 import ru.meowl.client.modules.render.HitBubbles;
 import ru.meowl.client.modules.render.JumpCircle;
-import ru.meowl.client.modules.render.TargetESP;
+import ru.meowl.client.modules.render.HudModule;
+import ru.meowl.client.modules.misc.ClickGuiModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleManager {
+    // Список абсолютно всех модулей чита
     private final List<Module> modules = new ArrayList<>();
 
     public ModuleManager() {
-        // Инициализируем твои визуальные модули
+        // 1. Твои модули (круги и пузыри)
         modules.add(new JumpCircle());
         modules.add(new HitBubbles());
-        // modules.add(new TargetESP()); // Раскомментируй, когда добавишь его класс
+        
+        // 2. Наш красивый HUD со скруглениями (Ватермарка)
+        modules.add(new HudModule());
 
-        // Здесь позже добавим модули для ClickGUI и HUD'а
+        // 3. Твой новый ClickGUI, который открывается на правый Shift
+        modules.add(new ClickGuiModule());
     }
 
+    /**
+     * Получить полный список всех модулей
+     */
     public List<Module> getModules() {
         return modules;
     }
 
+    /**
+     * Получить модули только одной конкретной категории (нужно для сетки в ClickGUI)
+     */
     public List<Module> getModulesByCategory(ModuleCategory category) {
-        return modules.stream().filter(m -> m.getCategory() == category).toList();
+        List<Module> categoryModules = new ArrayList<>();
+        for (Module m : modules) {
+            if (m.getCategory() == category) {
+                categoryModules.add(m);
+            }
+        }
+        return categoryModules;
     }
 
+    /**
+     * Поиск модуля по его имени
+     */
     public Module getModuleByName(String name) {
-        return modules.stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        for (Module m : modules) {
+            if (m.getName().equalsIgnoreCase(name)) {
+                return m;
+            }
+        }
+        return null;
     }
 }
-

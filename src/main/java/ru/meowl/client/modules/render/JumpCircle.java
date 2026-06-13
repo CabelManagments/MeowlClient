@@ -1,8 +1,34 @@
+package ru.meowl.client.modules.render;
+
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector4i;
+import ru.meowl.client.modules.Module;
+import ru.meowl.client.modules.ModuleCategory;
+// Если твои ивенты, Counter и утилиты лежат в других пакетах, поправь пути импортов ниже:
+import ru.meowl.client.events.EventHandler;
+import ru.meowl.client.events.TickEvent;
+import ru.meowl.client.events.WorldRenderEvent;
+import ru.meowl.client.utils.ColorUtil;
+import ru.meowl.client.utils.Counter;
+import ru.meowl.client.utils.Render3DUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JumpCircle extends Module {
 
-    private final List<Circle> circles = new ArrayList<>();
-    final Identifier circleTexture = Identifier.of("textures/circle.png");
+    protected static final MinecraftClient mc = MinecraftClient.getInstance();
+    
+    final List<Circle> circles = new ArrayList<>();
+    final Identifier circleTexture = Identifier.of("meowldlc", "textures/circle.png");
     boolean wasOnGround = true;
 
     public JumpCircle() {
@@ -26,7 +52,7 @@ public class JumpCircle extends Module {
 
         wasOnGround = isOnGround;
 
-        circles.removeIf(c -> c.timer.passedMs(3000));
+        circles.removeIf(c -> c.timer().passedMs(3000));
     }
 
     @EventHandler
@@ -43,7 +69,7 @@ public class JumpCircle extends Module {
     }
 
     private void renderSingleCircle(Circle circle) {
-        float lifeTime = (float) circle.timer.getPassedTimeMs();
+        float lifeTime = (float) circle.timer().getPassedTimeMs();
         float maxTime = 3000f;
         float progress = lifeTime / maxTime;
 
@@ -60,20 +86,20 @@ public class JumpCircle extends Module {
         Vec3d circlePos = circle.pos();
 
         MatrixStack matrixStack = new MatrixStack();
+        
+        // В Minecraft 1.21.4 вращения делаются через кватернионы JOML
+        matrixStack.multiply(new Quaternionf().rotationX((float) Math.toRadians(camera.getPitch())));
+        matrixStack.multiply(new Quaternionf().rotationY((float) Math.toRadians(camera.getYaw() + 180.0F)));
 
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-
-        matrixStack.translate(circlePos.x - cameraPos.x, circlePos.y - cameraPos.y, circlePos.z - cameraPos.z);
-
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-camera.getYaw()));
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
-
+        matrixStack.translate(circlePos.x - cameraPos.x, circlePos.y - cameraPos.y, circlePos.z - cameraPos.z);                                                                       
+        matrixStack.multiply(new Quaternionf().rotationY((float) Math.toRadians(-camera.getYaw())));
+        matrixStack.multiply(new Quaternionf().rotationX((float) Math.toRadians(90f)));                
+        
         MatrixStack.Entry entry = matrixStack.peek();
         Vector4i colors = new Vector4i(color, color, color, color);
 
         Render3DUtil.drawTexture(entry, circleTexture, -scale/2, -scale/2, scale, scale, colors, true);
-    }
-
+    }                                                                                      
+    
     public record Circle(Vec3d pos, Counter timer) {}
 }

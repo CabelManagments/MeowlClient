@@ -11,19 +11,22 @@ base {
 }
 
 repositories {
-    // Репозитории для поиска библиотек Майнкрафта и Фабрика
     maven { url = "https://maven.fabricmc.net/" }
     mavenCentral()
 }
 
 dependencies {
-    // Основные зависимости из gradle.properties
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Подключаем Fabric API (он нужен для худов и рендера)
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ДОБАВЛЯЕМ ЛОМБОК СЮДА, ЧТОБЫ ОН САМ ПРИМЕНИЛСЯ К ТВОИМ МОДУЛЯМ
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 processResources {
